@@ -92,7 +92,7 @@ BASE=http://localhost:3100 npm test
 
 ```
 server/schema.js    資料模型與角色權限表（要新增欄位改這裡，重啟後自動補欄位）
-server/access.js    列層級、欄位層級權限
+server/access.js    列層級、欄位層級權m
 api/index.js        Vercel Function 進入點（/api/* 由 vercel.json 轉給它）
 vercel.json         Vercel 區域與每日 Cron
 server/db.js        資料庫（Turso／本機 SQLite），啟動時自動建表補欄位
@@ -109,4 +109,4 @@ test/acceptance.js  驗收測試
 2. 建立 Meta App、完成商家驗證，取得 `ads_read` 權限
 3. 用公司 LINE OA 與廣告帳號實測同步欄位，確認每日執行時刻與重抓天數
 4. 匯入既有成果與合作資料（後台「資料匯入」有範本可下載）
-5. 2026.11.23 11:58am updated
+5. 2026.11.23 12:01pm updated
