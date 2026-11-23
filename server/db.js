@@ -9,7 +9,8 @@ const url = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || (() =>
   fs.mkdirSync(dir, { recursive: true });
   return 'file:' + path.join(dir, 'app.db');
 })();
-const client = createClient({ url, authToken: process.env.TURSO_AUTH_TOKEN });
+// 雲端上改用 HTTPS 連線（無伺服器環境比 WebSocket 穩定）
+const client = createClient({ url: url.trim().replace(/^libsql:\/\//, 'https://'), authToken: process.env.TURSO_AUTH_TOKEN?.trim() });
 
 const plain = rs => rs.rows.map(r => Object.fromEntries(rs.columns.map((c, i) => [c, r[i] instanceof ArrayBuffer ? Buffer.from(r[i]) : r[i]])));
 const norm = args => args.map(a => (a === undefined ? null : typeof a === 'boolean' ? (a ? 1 : 0) : a));

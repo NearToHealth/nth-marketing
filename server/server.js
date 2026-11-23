@@ -24,6 +24,31 @@ app.use((req, res, next) => {
 // 自架時由 Express 提供前端；Vercel 上 public/ 由 CDN 提供
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// 連線診斷：直接測試資料庫連線，回傳 Turso 的原始回應（不含任何密碼或 Token 內容）
+app.get('/api/health', async (req, res) => {
+  const raw = (process.env.TURSO_DATABASE_URL || '').trim();
+  const token = (process.env.TURSO_AUTH_TOKEN || '').trim();
+  const out = {
+    env: {
+      APP_SECRET: !!process.env.APP_SECRET, CRON_SECRET: !!process.env.CRON_SECRET, ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
+      ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD, TURSO_DATABASE_URL: !!raw, TURSO_AUTH_TOKEN_length: token.length,
+    },
+  };
+  try {
+    const u = new URL(raw.replace(/^libsql:\/\//, 'https://'));
+    out.db_host = u.host;
+    out.url_ok = /\.turso\.io$/.test(u.host) && (u.pathname === '/' || u.pathname === '');
+    const r = await fetch(`https://${u.host}/v2/pipeline`, {
+      method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests: [{ type: 'execute', stmt: { sql: 'SELECT 1' } }, { type: 'close' }] }),
+      signal: AbortSignal.timeout(10000),
+    });
+    out.turso_status = r.status;
+    out.turso_response = (await r.text()).slice(0, 500);
+  } catch (e) { out.error = String(e.message || e).slice(0, 300); }
+  res.set('Cache-Control', 'no-store').json(out);
+});
+
 // 冷啟動時建表／補欄位，並建立第一個管理員（只做一次）
 let ready;
 async function init() {
