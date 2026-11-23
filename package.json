@@ -2,7 +2,7 @@
   "name": "nth-marketing",
   "version": "0.3.0",
   "description": "鄰近健康 行銷社群系統",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "test": "node test/acceptance.js"

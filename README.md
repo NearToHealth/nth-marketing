@@ -12,7 +12,7 @@
 - 測試環境和正式環境各建一個資料庫（Preview 與 Production 環境變數分開設定）
 
 ### 2. 匯入專案
-把這個資料夾推到公司的私人 GitHub repo，在 vercel.com/new 匯入。不用設定 Build Command，Vercel 會自動偵測 Express。
+把這個資料夾推到公司的私人 GitHub repo，在 vercel.com/new 匯入。Framework Preset 選 **Other**，其他設定維持預設（前端由 `public/` 提供，後端由 `api/index.js` 提供）。
 
 ### 3. 環境變數（Settings → Environment Variables）
 
@@ -93,7 +93,7 @@ BASE=http://localhost:3100 npm test
 ```
 server/schema.js    資料模型與角色權限表（要新增欄位改這裡，重啟後自動補欄位）
 server/access.js    列層級、欄位層級權限
-index.js            Vercel 進入點
+api/index.js        Vercel Function 進入點（/api/* 由 vercel.json 轉給它）
 vercel.json         Vercel 區域與每日 Cron
 server/db.js        資料庫（Turso／本機 SQLite），啟動時自動建表補欄位
 server/server.js    API、內容流程、匯入匯出、附件、帳號、平台串接
