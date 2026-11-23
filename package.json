@@ -1,0 +1,19 @@
+{
+  "name": "nth-marketing",
+  "version": "0.3.0",
+  "description": "鄰近健康 行銷社群系統",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node test/acceptance.js"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.3.0"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}
